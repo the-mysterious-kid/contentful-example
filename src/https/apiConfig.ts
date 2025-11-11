@@ -5,7 +5,7 @@
 // }
 
 const laravelApi = () => {
-    return 'https://mappdev.educationcity.qa/api/v2/'
+    return 'https://mappdev.educationcity.qa'
 }
 
 const url = {
@@ -13,9 +13,12 @@ const url = {
     // apiUrl, laravelApi
 }
 const urlEndPoints = {
-    getPlanList: `plan/list`,
+    getPlanList: `/api/plan/list`,
     activitiesList: (page: string) => {
-        return `activities_filter?page=${page}`
+        return `/api/v2/activities_filter?page=${page}`
+    },
+    activitiesDetail: (id: string) => {
+        return `/api/v3/event/${id}`
     }
 }
 

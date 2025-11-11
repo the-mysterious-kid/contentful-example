@@ -10,6 +10,7 @@ import SdkLiveScreen from "../screens/SdkLiveScreen";
 import RestLiveScreen from "../screens/RestLiveScreen";
 import SdkLocalScreen from "../screens/SdkLocalScreen";
 import RestLocalScreen from "../screens/RestLocalScreen";
+import ActivityDetailScreen from "../screens/ActivityDetailScreen";
 
 const Stack = createStackNavigator();
 const RootNavigation = () => {
@@ -17,12 +18,13 @@ const RootNavigation = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HomeScreen" screenOptions={{ animation: Platform.OS === "ios" ? "default" : "fade_from_bottom", headerShown: true }} >
         <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ title: 'Home' }} />
-        <Stack.Screen name='ContentFullSdkScreen' component={ContentFullSdkScreen} options={{ title: 'ContentFull SDK' }} />
+        <Stack.Screen name='ContentFullSdkScreen' component={ContentFullSdkScreen} options={{ headerTitle: 'SDK' }} />
         <Stack.Screen name='RestApiScreen' component={RestApiScreen} options={{ title: 'Rest API' }} />
-        <Stack.Screen name="SdkLiveScreen" component={SdkLiveScreen} />
+        <Stack.Screen name="SdkLiveScreen" component={SdkLiveScreen} options={{ headerTitle: "Activity List" }} />
         <Stack.Screen name="SdkLocalScreen" component={SdkLocalScreen} />
         <Stack.Screen name="RestLiveScreen" component={RestLiveScreen} />
         <Stack.Screen name="RestLocalScreen" component={RestLocalScreen} />
+        <Stack.Screen name="ActivityDetailScreen" component={ActivityDetailScreen} options={{ headerTitle: "Activity detail" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

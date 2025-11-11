@@ -19,16 +19,29 @@ export const fetchEntry = async (entryId: string) => {
     // Fallback: fetch directly if not in sync results
     const entry = await contentfulClient.getEntry(entryId);
 
-    // Load existing cache and update with fetched entry
+    // Load existing cache safely
     const existingCache = await AsyncStorage.getItem(CACHED_ENTRIES_KEY);
-    const cache = existingCache ? JSON.parse(existingCache) : {};
+    let cache: Record<string, any> = {};
+
+    if (existingCache) {
+      try {
+        const parsed = JSON.parse(existingCache);
+        if (typeof parsed === "object" && parsed !== null) {
+          cache = parsed;
+        }
+      } catch (e) {
+        console.warn("Corrupted cache, resetting:", e);
+      }
+    }
+
+    // ✅ Safely update cache
     cache[entryId] = entry;
 
     await AsyncStorage.setItem(CACHED_ENTRIES_KEY, JSON.stringify(cache));
 
     return entry;
   } catch (error) {
-    console.error('Error fetching entry:', error);
+    console.error("Error fetching entry:", error);
     return null;
   }
 };
