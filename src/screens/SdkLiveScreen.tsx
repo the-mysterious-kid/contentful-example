@@ -55,17 +55,18 @@ const SdkLiveScreen = () => {
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: WIDTH }}>
-                {/* {contentLoader ? (
+                {contentLoader ? (
                     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, paddingVertical: HEIGHT * 0.08, width: '100%' }}>
                         <ActivityIndicator size={'large'} />
                     </View>
                 ) : (
                     <View style={{alignItems: 'center'}}>
-                        <Text style={styles.header}>Contentful</Text>
-                        {fields.description && renderRichText(fields.description)}
+                        {/* <Text style={styles.header}>Contentful</Text> */}
+                        <Text style={styles.header}>{fields.headerText}</Text>
+                        {/* {fields.description && renderRichText(fields.description)} */}
                     </View>
-                )} */}
-                {/* {fields.dateField && (
+                )}
+                {fields.dateField && (
                     <Text style={styles.dateText}>
                         Date: {new Date(fields.dateField).toLocaleDateString()}
                     </Text>
@@ -74,13 +75,13 @@ const SdkLiveScreen = () => {
                     <Text style={styles.jsonText}>
                         JSON: {JSON.stringify(fields.jsonField?.['en-US'])}
                     </Text>
-                )} */}
+                )}
 
-                {/* <View style={{ borderWidth: 1, width: WIDTH, marginVertical: HEIGHT * 0.04 }} />
-                <Text style={[styles.header]}>
+                {/* <View style={{ borderWidth: 1, width: WIDTH, marginVertical: HEIGHT * 0.04 }} /> */}
+                {/* <Text style={[styles.header]}>
                     TMS
-                </Text> */}
-                <Text style={styles.header}>{fields.headerText}</Text>
+                </Text>
+                <Text style={styles.header}>{fields.headerText}</Text> */}
                 <FlatList
                     data={activityList?.activities}
                     contentContainerStyle={{ gap: HEIGHT * 0.02, width: WIDTH * 0.75 }}
