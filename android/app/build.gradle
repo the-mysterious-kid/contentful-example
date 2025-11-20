@@ -57,11 +57,20 @@ android {
 
 dependencies {
     implementation("com.facebook.react:react-android")
-    implementation("com.facebook.react:flipper-integration")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
+    
+    // Autolinked native modules
+    implementation project(':react-native-async-storage_async-storage')
+    implementation project(':react-native-masked-view_masked-view')
+    implementation project(':react-native-gesture-handler')
+    implementation project(':react-native-reanimated')
+    implementation project(':react-native-safe-area-context')
+    implementation project(':react-native-screens')
+    implementation project(':react-native-webview')
+    implementation project(':react-native-worklets')
 }
