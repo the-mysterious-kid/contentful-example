@@ -259,12 +259,27 @@ const ActivityDetailScreen = () => {
         }
         const { fields } = contentfulEntry;
 
+        // Get the hideContactSection value from the entry
+        const hideContactSection = fields.hideContactSection ?? false;
+
         // Get ordered fields based on content type metadata
         const orderedFields = getOrderedFields(fields, contentTypeMetadata);
 
         return (
             <View>
+                {/* Display hideContactSection value */}
+                <View style={{ backgroundColor: '#F5F5F5', borderRadius: 8, paddingBottom: 20 }}>
+                    <Text style={{ fontWeight: "bold", fontSize: 14, color: '#333' }}>
+                        Hide Contact Section: {String(hideContactSection)}
+                    </Text>
+                </View>
+
                 {orderedFields.map(([key, value], index) => {
+                    // Skip rendering enterContactHeader if hideContactSection is true
+                    if (key === 'enterContactHeader' && hideContactSection) {
+                        return null;
+                    }
+
                     if (!fieldMapping[key]) return null;
                     const apiValue = fieldMapping[key](apiData);
                     console.log("index=>", key, apiValue);
@@ -295,6 +310,7 @@ const ActivityDetailScreen = () => {
         );
     };
 
+    console.log("activitiesDetail=>", activitiesDetail);
     console.log("entry=>", entry);
 
     return (
