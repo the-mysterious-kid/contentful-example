@@ -11,6 +11,7 @@ import RestLiveScreen from "../screens/RestLiveScreen";
 import SdkLocalScreen from "../screens/SdkLocalScreen";
 import RestLocalScreen from "../screens/RestLocalScreen";
 import ActivityDetailScreen from "../screens/ActivityDetailScreen";
+import ModuleScreen from "../screens/ModuleScreen";
 
 const Stack = createStackNavigator();
 const RootNavigation = () => {
@@ -25,6 +26,7 @@ const RootNavigation = () => {
         <Stack.Screen name="RestLiveScreen" component={RestLiveScreen} />
         <Stack.Screen name="RestLocalScreen" component={RestLocalScreen} />
         <Stack.Screen name="ActivityDetailScreen" component={ActivityDetailScreen} options={{ headerTitle: "Activity detail" }} />
+        <Stack.Screen name="ModuleScreen" component={ModuleScreen} options={{ headerTitle: "Module" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
