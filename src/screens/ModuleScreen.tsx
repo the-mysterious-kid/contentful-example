@@ -36,6 +36,10 @@ const isAssetLink = (value: any): boolean => {
   return value?.sys?.type === 'Link' && value?.sys?.linkType === 'Asset';
 };
 
+const isResolvedAsset = (value: any): boolean => {
+  return value?.sys?.type === 'Asset' && value?.fields?.file;
+};
+
 // Task 5.2: Field ordering logic
 interface OrderedField {
   name: string;
@@ -98,7 +102,6 @@ const ModuleScreen = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [linkedEntries, setLinkedEntries] = useState<Record<string, ContentfulEntry>>({});
-  const [assets, setAssets] = useState<Record<string, any>>({});
 
   // Function to fetch assets
   const fetchAsset = async (assetId: string) => {
@@ -174,7 +177,6 @@ const ModuleScreen = () => {
     }
 
     setLinkedEntries(linkedEntriesMap);
-    setAssets(assetsMap);
   };
 
   // Task 2.1: Create loadEntry async function
@@ -279,6 +281,8 @@ const ModuleScreen = () => {
 
   // Order the fields
   const orderedFields = orderFields(entry);
+  console.log("orderedFields=>", orderedFields);
+  
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -361,25 +365,28 @@ const ModuleScreen = () => {
                 return (
                   <View key={linkIndex} style={styles.linkedEntryContainer}>
                     {Object.entries(linkedEntry.fields).map(([linkedFieldName, linkedFieldValue]) => {
-                      // Render asset (image)
-                      if (isAssetLink(linkedFieldValue)) {
-                        const asset = assets[linkedFieldValue.sys.id];
-                        if (asset && asset.fields.file) {
-                          const imageUrl = asset.fields.file.url.startsWith('//')
-                            ? `https:${asset.fields.file.url}`
-                            : asset.fields.file.url;
+                      // Render resolved asset (image)
+                      if (isResolvedAsset(linkedFieldValue)) {
+                        const fileField = linkedFieldValue.fields.file;
+                        const fileUrl = fileField['en-US']?.url || fileField.url;
+                        if (fileUrl) {
+                          const imageUrl = fileUrl.startsWith('//') ? `https:${fileUrl}` : fileUrl;
                           return (
                             <View key={linkedFieldName} style={styles.imageContainer}>
-                              {/* <Text style={styles.linkedFieldLabel}>{linkedFieldName}:</Text> */}
                               <Image
                                 source={{ uri: imageUrl }}
                                 style={styles.linkedEntryImage}
                                 resizeMode="cover"
                               />
-                              {/* <Text style={styles.imageUrl}>{imageUrl}</Text> */}
                             </View>
                           );
                         }
+                        return null;
+                      }
+                      
+                      // Render asset link (fallback)
+                      if (isAssetLink(linkedFieldValue)) {
+                        // Asset is not resolved, skip it
                         return null;
                       }
 
