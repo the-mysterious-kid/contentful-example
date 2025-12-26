@@ -31,21 +31,21 @@ const loadCache = async (): Promise<Record<string, any>> => {
 
 const syncContentTypesIfNeeded = async (force: boolean): Promise<boolean> => {
   const needsSync = force || await shouldSyncContentTypes();
-  
+
   if (!needsSync) {
-    console.log('[syncService] Content types up to date');
+    // console.log('[syncService] Content types up to date');
     return false;
   }
 
   console.log(`[syncService] ${force ? 'Force' : 'Auto'} syncing content types...`);
   const result = await syncContentTypes();
-  
+
   if (result) {
-    console.log('[syncService] Content types synced successfully');
+    // console.log('[syncService] Content types synced successfully');
     return true;
   }
-  
-  console.warn('[syncService] Content type sync failed, using cache');
+
+  // console.warn('[syncService] Content type sync failed, using cache');
   return false;
 };
 
@@ -58,18 +58,20 @@ export const syncContent = async (forceContentTypeSync = false): Promise<SyncCon
 
     // Sync entries
     const savedToken = await AsyncStorage.getItem(SYNC_TOKEN_KEY);
-    console.log(`[syncService] ${savedToken ? 'Incremental' : 'Initial'} entry sync...`);
+    // console.log(`[syncService] ${savedToken ? 'Incremental' : 'Initial'} entry sync...`);
 
-    const response = savedToken
-      ? await contentfulClient.sync({ nextSyncToken: savedToken })
-      : await contentfulClient.sync({ initial: true });
+    const response = await contentfulClient.sync({ initial: true });
+    //Diabling the Sync API
+    // const response = savedToken
+    //   ? await contentfulClient.sync({ nextSyncToken: savedToken })
+    //   : await contentfulClient.sync({ initial: true });
 
     const { entries = [], nextSyncToken } = response;
-    console.log(`[syncService] Received ${entries.length} entries`);
+    // console.log(`[syncService] Received ${entries.length} entries`);
 
     // Merge with cache
     const cachedEntries = await loadCache();
-    
+
     for (const entry of entries) {
       const cachedEntry = {
         ...entry,
@@ -79,9 +81,9 @@ export const syncContent = async (forceContentTypeSync = false): Promise<SyncCon
 
       const ctId = cachedEntry.sys?.contentType?.sys?.id;
       if (ctId) {
-        console.log(`[syncService] Entry ${entry.sys.id}: content type ${ctId}`);
+        // console.log(`[syncService] Entry ${entry.sys.id}: content type ${ctId}`);
       } else {
-        console.warn(`[syncService] Entry ${entry.sys.id}: missing content type ID`);
+        // console.warn(`[syncService] Entry ${entry.sys.id}: missing content type ID`);
       }
 
       cachedEntries[entry.sys.id] = cachedEntry;
@@ -93,22 +95,22 @@ export const syncContent = async (forceContentTypeSync = false): Promise<SyncCon
       await AsyncStorage.setItem(SYNC_TOKEN_KEY, nextSyncToken);
     }
 
-    console.log(`[syncService] Synced ${Object.keys(cachedEntries).length} total entries`);
+    // console.log(`[syncService] Synced ${Object.keys(cachedEntries).length} total entries`);
     return { entries: cachedEntries, contentTypesUpdated };
 
   } catch (error) {
-    console.error('[syncService] Sync error:', error);
-    
+    // console.error('[syncService] Sync error:', error);
+
     if (error instanceof Error && /Network|timeout/.test(error.message)) {
-      console.log('[syncService] Network error - app offline');
+      // console.log('[syncService] Network error - app offline');
     }
 
     // Fallback to cache
     const cachedEntries = await loadCache();
     if (Object.keys(cachedEntries).length > 0) {
-      console.log(`[syncService] Using ${Object.keys(cachedEntries).length} cached entries (offline mode)`);
+      // console.log(`[syncService] Using ${Object.keys(cachedEntries).length} cached entries (offline mode)`);
     } else {
-      console.warn('[syncService] No cache available - limited functionality');
+      // console.warn('[syncService] No cache available - limited functionality');
     }
 
     return { entries: Object.keys(cachedEntries).length > 0 ? cachedEntries : null, contentTypesUpdated };

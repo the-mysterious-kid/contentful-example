@@ -11,7 +11,7 @@ import RestLiveScreen from "../screens/RestLiveScreen";
 import SdkLocalScreen from "../screens/SdkLocalScreen";
 import RestLocalScreen from "../screens/RestLocalScreen";
 import ActivityDetailScreen from "../screens/ActivityDetailScreen";
-import ModuleScreen from "../screens/ModuleScreen";
+import ModuleScreen from "../screens/ModuleScreenTwo";
 
 const Stack = createStackNavigator();
 const RootNavigation = () => {
